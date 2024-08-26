@@ -1,24 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Provider } from "react-redux"; // Corrected import from react-redux
+import { store } from "./redux/store";
+import "./App.css";
+import ShowContacts from "./ContactPages/contact list/list"; // Use PascalCase for component names
+import AddnewContact from "./ContactPages/contactaddForm/contactform";
+import FavContact from "./ContactPages/favContact/favcontact";
+import { ToastContainer, toast } from 'react-toastify';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <AddnewContact/>
+      <ShowContacts /> {/* Use the component with uppercase naming */}
+      <FavContact/>
+      <ToastContainer/>
+    </Provider>
   );
 }
 

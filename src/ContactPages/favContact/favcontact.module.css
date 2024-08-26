@@ -1,0 +1,17 @@
+.container{
+    display:inline-block;
+    width: 30%;
+    background-color:rgb(144, 202, 238);
+    margin-top: -2.5%;
+    
+}
+.dial{
+    width: 18%;
+    height: 18%;
+    margin-left: 50%;
+    margin-right: 10%;
+}
+
+.dial:hover{
+    opacity: 0.5;
+}
