@@ -4,7 +4,7 @@ import "./App.css";
 import ShowContacts from "./ContactPages/contact list/list"; // Use PascalCase for component names
 import AddnewContact from "./ContactPages/contactaddForm/contactform";
 import FavContact from "./ContactPages/favContact/favcontact";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 function App() {
   return (
     <Provider store={store}>

@@ -66,12 +66,11 @@ const contactSlice = createSlice({
       state.list = state.list.filter((v, index) => v.id !== action.payload);
     },
     addEditdata: (state, action) => {
-      const { index } = action.payload;
       state.editContactsData = { ...action.payload };
     },
     updateContactAsync: (state, action) => {
       const { id } = action.payload;
-      const index = state.list.findIndex((i) => i.id == id);
+      const index = state.list.findIndex((i) => i.id ===id);
       state.list[index] = action.payload;
     },
     clearEditData: (state, action) => {

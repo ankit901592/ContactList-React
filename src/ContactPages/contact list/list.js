@@ -58,7 +58,7 @@ function ShowContacts() {
                   </div>
                 </div>
                 <div>
-                  <img
+                  <img alt="call logo"
                     className={styles.dial} // Placeholder for potential contact image
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpI1rzX9kLBKXJ9woH4ZJMzcajbVwAEG8wbw&s"
                     />
