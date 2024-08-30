@@ -1,7 +1,7 @@
 // Import necessary hooks and functions from React and Redux
 import { useSelector, useDispatch } from "react-redux";
 import { selectContact } from "../../redux/reducer/contacReducer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   getContactListAsync,
   DeleteAsyncThunk,
@@ -19,8 +19,6 @@ import {
 
 // Functional component to display the list of contacts
 function ShowContacts() {
-  const [deletedId, setDeletedId] = useState();
-
   const dispatch = useDispatch(); // Initialize dispatch to dispatch actions
 
   const contacts = useSelector(selectContact); // Access the contacts from the Redux store
@@ -30,10 +28,10 @@ function ShowContacts() {
     dispatch(getContactListAsync());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(DeleteAsyncThunk(deletedId));
-  }, [dispatch]);
-
+  function handleDelete(id) {
+    dispatch(DeleteAsyncThunk(id));
+    toast.success("Contact Deleted successfully");
+  }
   // If there are no contacts, display a loading message
   if (!contacts || contacts.length === 0) {
     return (
@@ -84,11 +82,7 @@ function ShowContacts() {
 
                   {/* Button to delete contact, triggers deleteContact action and shows toast notification */}
                   <button
-                    onClick={() => {
-                      // dispatch(deleteContact(contact.id));
-                      setDeletedId(contact.id);
-                      toast.success("Contact Deleted successfully");
-                    }}
+                    onClick={() => handleDelete(contact.id)}
                     className="btn btn-danger btn-sm"
                   >
                     <i className="fas fa-trash-alt"></i> {/* Trash icon */}
