@@ -1,8 +1,11 @@
 // Import necessary hooks and functions from React and Redux
 import { useSelector, useDispatch } from "react-redux";
 import { selectContact } from "../../redux/reducer/contacReducer";
-import { useEffect } from "react";
-import { getContactListAsync } from "../../redux/reducer/contacReducer";
+import { useEffect, useState } from "react";
+import {
+  getContactListAsync,
+  DeleteAsyncThunk,
+} from "../../redux/reducer/contacReducer";
 import styles from "./list.module.css";
 import { FaRegStar } from "react-icons/fa"; // Importing star icon
 import { IoCallSharp } from "react-icons/io5"; // Importing call icon
@@ -10,13 +13,14 @@ import { toast } from "react-toastify"; // Importing toast notification
 
 // Importing Redux actions for managing contacts
 import {
-  deleteContact, // Action to delete a contact
   addEditdata, // Action to populate the form with contact data for editing
   addToFavList, // Action to add a contact to the favorite list
 } from "../../redux/reducer/contacReducer";
 
 // Functional component to display the list of contacts
 function ShowContacts() {
+  const [deletedId, setDeletedId] = useState();
+
   const dispatch = useDispatch(); // Initialize dispatch to dispatch actions
 
   const contacts = useSelector(selectContact); // Access the contacts from the Redux store
@@ -25,6 +29,10 @@ function ShowContacts() {
   useEffect(() => {
     dispatch(getContactListAsync());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(DeleteAsyncThunk(deletedId));
+  }, [deletedId]);
 
   // If there are no contacts, display a loading message
   if (!contacts || contacts.length === 0) {
@@ -58,14 +66,17 @@ function ShowContacts() {
                   </div>
                 </div>
                 <div>
-                  <img alt="call logo"
+                  <img
+                    alt="call logo"
                     className={styles.dial} // Placeholder for potential contact image
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpI1rzX9kLBKXJ9woH4ZJMzcajbVwAEG8wbw&s"
-                    />
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpI1rzX9kLBKXJ9woH4ZJMzcajbVwAEG8wbw&s"
+                  />
 
                   {/* Button to edit contact, triggers addEditdata action */}
                   <button
-                    onClick={() => dispatch(addEditdata(contact))}
+                    onClick={() => {
+                      dispatch(addEditdata(contact));
+                    }}
                     className="btn btn-warning btn-sm me-2"
                   >
                     <i className="fas fa-edit"></i> {/* Edit icon */}
@@ -74,7 +85,8 @@ function ShowContacts() {
                   {/* Button to delete contact, triggers deleteContact action and shows toast notification */}
                   <button
                     onClick={() => {
-                      dispatch(deleteContact(contact.id));
+                      // dispatch(deleteContact(contact.id));
+                      setDeletedId(contact.id);
                       toast.success("Contact Deleted successfully");
                     }}
                     className="btn btn-danger btn-sm"

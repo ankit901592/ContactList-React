@@ -3,12 +3,13 @@ import styles from "./contactform.module.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  putAsyncThunk,
   postAddContactAsync,
   addEditdata,
-  updateContactAsync,
+  updateContactLocal,
   clearEditData,
 } from "../../redux/reducer/contacReducer";
-import {toast } from "react-toastify"; // For toast notifications
+import { toast } from "react-toastify"; // For toast notifications
 import "react-toastify/dist/ReactToastify.css"; // Importing the default styles for react-toastify
 
 function AddnewContact() {
@@ -59,8 +60,10 @@ function AddnewContact() {
     };
 
     if (isEditing) {
-      // If in edit mode, dispatch updateContactAsync action
-      dispatch(updateContactAsync(contact));
+      // If in edit mode, dispatch putAsyncThunk action
+      dispatch(putAsyncThunk(contact));
+      // updating the contact which your are manualy adding into contact list 
+      dispatch(updateContactLocal(contact));
       toast.success("Contact Updated successfully"); // Show success notification
     } else {
       // If in add mode, dispatch postAddContactAsync action
@@ -135,7 +138,6 @@ function AddnewContact() {
             type="email"
             placeholder="Enter Email "
             name="email"
-            required
             className={styles.input}
             value={editContact.email} // Bind input to state
             onChange={(e) =>

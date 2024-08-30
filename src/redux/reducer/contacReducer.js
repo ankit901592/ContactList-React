@@ -15,7 +15,7 @@ export const getContactListAsync = createAsyncThunk(
     }
   }
 );
-
+ // posting the data into server and adding into contact list
 export const postAddContactAsync = createAsyncThunk(
   "contacts/postAddContactAsync",
   async (payload, thunkApi) => {
@@ -44,6 +44,54 @@ export const postAddContactAsync = createAsyncThunk(
   }
 );
 
+
+// updating the existing  data into server and updating contact list as well;
+export const putAsyncThunk = createAsyncThunk(
+  "contacts/putContactAsync",
+  async (payload, thunkApi) => {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${payload.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update contact");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.message);
+    }
+  }
+);
+// deleting  the data into server and deleting into our contact list as well
+export const DeleteAsyncThunk = createAsyncThunk(
+  "contact/deleteContactAsync",
+  async (payload, thunkApi) => {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${payload}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to deleteContact");
+      }
+
+      return payload;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.message);
+    }
+  }
+);
+
 // Initial state
 const initialState = {
   list: [],
@@ -62,25 +110,24 @@ const contactSlice = createSlice({
   name: "contacts",
   initialState,
   reducers: {
-    deleteContact: (state, action) => {
-      state.list = state.list.filter((v, index) => v.id !== action.payload);
-    },
     addEditdata: (state, action) => {
       state.editContactsData = { ...action.payload };
     },
-    updateContactAsync: (state, action) => {
-      const { id } = action.payload;
-      const index = state.list.findIndex((i) => i.id ===id);
-      state.list[index] = action.payload;
-    },
+
     clearEditData: (state, action) => {
       state.editContactsData = "";
+      // handeling the new contact which manualy we are adding that is updating with this 
+    },updateContactLocal:(state,action)=>{
+      const { id } = action.payload;
+      const index = state.list.findIndex((i) => i.id === id);
+      state.list[index] = action.payload;
+
     },
+
     addToFavList: (state, action) => {
       let { name } = action.payload;
       const fav = state.favList.find((i) => i.name === name);
-
-      // If the item is not found, add it to the favList
+      // If the item is not already in fav list found, add it to the favList
       if (!fav) {
         state.favList.push(action.payload);
       }
@@ -97,6 +144,19 @@ const contactSlice = createSlice({
       })
       .addCase(postAddContactAsync.fulfilled, (state, action) => {
         state.list.push(action.payload);
+      })
+
+      //handeling the fulfilled state to update the contact
+      .addCase(putAsyncThunk.fulfilled, (state, action) => {
+       
+        const { id } = action.payload;
+        const index = state.list.findIndex((i) => i.id === id);
+        state.list[index] = action.payload;
+      })
+      // handeling getting the id of particular  contact and deleting that contact
+      .addCase(DeleteAsyncThunk.fulfilled, (state, action) => {
+       
+        state.list = state.list.filter((v, index) => v.id !== action.payload);
       });
   },
 });
@@ -106,10 +166,9 @@ export const {
   deletetoFav,
   clearEditData,
   addContact,
-  deleteContact,
   editContact,
   addEditdata,
-  updateContactAsync,
+  updateContactLocal,
 } = contactSlice.actions;
 
 export const selectContact = (state) => {
