@@ -32,7 +32,7 @@ function ShowContacts() {
 
   useEffect(() => {
     dispatch(DeleteAsyncThunk(deletedId));
-  }, [deletedId]);
+  }, [dispatch]);
 
   // If there are no contacts, display a loading message
   if (!contacts || contacts.length === 0) {
